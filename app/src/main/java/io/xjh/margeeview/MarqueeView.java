@@ -29,6 +29,7 @@ public class MarqueeView extends LinearLayout{
     private float density;
     private float textLeftPadding,textRightPadding;
     private int textSize=10;
+    private boolean isinit=true;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
         @Override
@@ -39,6 +40,7 @@ public class MarqueeView extends LinearLayout{
             }
         }
     };
+    private int time=0;
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -85,12 +87,10 @@ public class MarqueeView extends LinearLayout{
     public void translate(){
         for (int i=0;i<getChildCount();i++){
             View v=getChildAt(i);
-            int time=(int)v.getTag();
             time++;
-            v.setTag(time);
-            Log.d(MarqueeView.class.getName(),"i"+i+"\t child"+((TextView)v).getText()+"\t text"+v.getTranslationX());
-            if (amend(v)) continue;
-            v.setTranslationX(-3*time);
+//            Log.d(MarqueeView.class.getName(),"i"+i+"\t text\t"+((TextView)v).getText()+"\t translateX\t"+v.getTranslationX());
+            if (i==2&&amend(v)) break;
+            v.setTranslationX(-3* time);
 
 
         }
@@ -100,16 +100,14 @@ public class MarqueeView extends LinearLayout{
 
     private boolean amend(View v) {
         if(Math.abs(v.getTranslationX())>(v.getWidth()+v.getLeft())){
-            CharSequence s=((TextView) v).getText();
-            viewHolder.recyleTextView((TextView) v);
-            removeView(v);
-            TextView tv=viewHolder.getTextViewFromHolder(computeTextViewWidth(s.toString()));
-            tv.setText(s);
-            tv.setTranslationX(0);
-            tv.setLeft(computeTotalWidth()-tv.getWidth());
-            tv.setTag(0);
-            addView(tv,2);
-
+            for (int i=0;i<getChildCount();i++){
+                View view=getChildAt(i);
+                int width=view.getWidth();
+                view.setLeft(getWidth()+(int)view.getTag());
+                view.setRight(view.getLeft()+width);
+                Log.d(MarqueeView.class.getName(),"i"+i+"\t tag\t"+(int)(view.getTag())+"\t  width\t"+view.getWidth());
+            }
+            time=0;
             return true;
         }
         return false;
@@ -148,7 +146,6 @@ public class MarqueeView extends LinearLayout{
             }else {
                 textView=new TextView(getContext());
             }
-            textView.setTag(0);
             textView.setGravity(Gravity.CENTER_VERTICAL);
             LayoutParams layoutParams=new LinearLayout.LayoutParams(width,LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(layoutParams);
@@ -165,4 +162,17 @@ public class MarqueeView extends LinearLayout{
         }
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        if(isinit){
+            for (int i=0;i<getChildCount();i++){
+                View v=getChildAt(i);
+                v.setTag(v.getLeft());
+                Log.d(MarqueeView.class.getName(),"i\t"+i+"\tleft\t"+v.getLeft());
+            }
+            isinit=false;
+        }
+
+    }
 }
