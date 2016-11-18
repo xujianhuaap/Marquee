@@ -105,6 +105,7 @@ public class MarqueeView extends LinearLayout{
                 int width=view.getWidth();
                 view.setLeft(getWidth()+(int)view.getTag());
                 view.setRight(view.getLeft()+width);
+                view.setTranslationX(0);
                 Log.d(MarqueeView.class.getName(),"i"+i+"\t tag\t"+(int)(view.getTag())+"\t  width\t"+view.getWidth());
             }
             time=0;
