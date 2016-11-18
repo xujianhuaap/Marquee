@@ -59,9 +59,9 @@ public class MarqueeView extends LinearLayout{
     }
     public void setNews(){
         newsArr.clear();
-        newsArr.add("1111111111");
-        newsArr.add("22222ssss2222222222222222");
-        newsArr.add("33333eee2222222222222222222222222");
+        newsArr.add("11111111111111111111");
+        newsArr.add("22222222222222222222");
+        newsArr.add("33333333333333333333");
         addTextView();
     }
     private void addTextView(){
@@ -108,7 +108,7 @@ public class MarqueeView extends LinearLayout{
             tv.setTranslationX(0);
             tv.setLeft(computeTotalWidth()-tv.getWidth());
             tv.setTag(0);
-            addView(tv);
+            addView(tv,2);
 
             return true;
         }
