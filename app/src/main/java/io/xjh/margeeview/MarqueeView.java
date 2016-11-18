@@ -26,11 +26,9 @@ import java.util.TimerTask;
 public class MarqueeView extends LinearLayout{
     private final int newsCount;
     private ArrayList<String> newsArr=new ArrayList<>();
-    private int time=0;
     private float density;
     private float textLeftPadding,textRightPadding;
     private int textSize=10;
-    private int tranlateXSum;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
         @Override
@@ -38,7 +36,6 @@ public class MarqueeView extends LinearLayout{
             super.handleMessage(msg);
             if(msg.what==0x12){
                 translate();
-                time++;
             }
         }
     };
@@ -62,9 +59,9 @@ public class MarqueeView extends LinearLayout{
     }
     public void setNews(){
         newsArr.clear();
-        newsArr.add("1111111111111");
-        newsArr.add("22222222222  22");
-        newsArr.add("333333333  3");
+        newsArr.add("1111111111");
+        newsArr.add("22222ssss2222222222222222");
+        newsArr.add("33333eee2222222222222222222222222");
         addTextView();
     }
     private void addTextView(){
@@ -83,32 +80,48 @@ public class MarqueeView extends LinearLayout{
                 handler.sendEmptyMessage(0x12);
             }
         };
-        new Timer().schedule(timerTask,1000,100);
+        new Timer().schedule(timerTask,200,100);
     }
     public void translate(){
         for (int i=0;i<getChildCount();i++){
             View v=getChildAt(i);
-            if(i==0&&Math.abs(tranlateXSum)>v.getWidth()){
-                Log.d(MarqueeView.class.getName(),"left view"+tranlateXSum+"\t child"+getChildCount());
-                View textView=getChildAt(0);
-                viewHolder.recyleTextView((TextView) textView);
-                removeView(textView);
+            int time=(int)v.getTag();
+            time++;
+            v.setTag(time);
+            Log.d(MarqueeView.class.getName(),"i"+i+"\t child"+((TextView)v).getText()+"\t text"+v.getTranslationX());
+            if (amend(v)) continue;
+            v.setTranslationX(-3*time);
 
-                TextView tv=viewHolder.getTextViewFromHolder(computeTextViewWidth("sssssssssssssssssss"));
-                tv.setText("sssssssssssssssssss");
-                tranlateXSum=0;
-                addView(tv,getChildCount());
-            }
 
-            v.getLeft();
-            tranlateXSum=+(-10*time);
-            v.setTranslationX(-10*time);
         }
 
 
     }
 
+    private boolean amend(View v) {
+        if(Math.abs(v.getTranslationX())>(v.getWidth()+v.getLeft())){
+            CharSequence s=((TextView) v).getText();
+            viewHolder.recyleTextView((TextView) v);
+            removeView(v);
+            TextView tv=viewHolder.getTextViewFromHolder(computeTextViewWidth(s.toString()));
+            tv.setText(s);
+            tv.setTranslationX(0);
+            tv.setLeft(computeTotalWidth()-tv.getWidth());
+            tv.setTag(0);
+            addView(tv);
 
+            return true;
+        }
+        return false;
+    }
+
+    public int computeTotalWidth(){
+        int sum=0;
+        for(String s:newsArr){
+            sum=+computeTextViewWidth(s);
+        }
+        return sum;
+    }
     public int  computeTextViewWidth(String s){
         if(!TextUtils.isEmpty(s)){
             float v=(s.length()*textSize+textLeftPadding+textRightPadding)*density;
@@ -122,6 +135,7 @@ public class MarqueeView extends LinearLayout{
         public void recyleTextView(TextView view){
             view.setOnClickListener(null);
             view.setText("");
+            view.setTag(0);
             view.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT));
             views.add(views.size(),view);
         }
@@ -134,13 +148,13 @@ public class MarqueeView extends LinearLayout{
             }else {
                 textView=new TextView(getContext());
             }
-
+            textView.setTag(0);
             textView.setGravity(Gravity.CENTER_VERTICAL);
             LayoutParams layoutParams=new LinearLayout.LayoutParams(width,LayoutParams.MATCH_PARENT);
-
             textView.setLayoutParams(layoutParams);
             textView.setPadding((int)(textLeftPadding*density),10,(int)(textRightPadding*density),10);
             textView.setMaxLines(1);
+
             textView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
