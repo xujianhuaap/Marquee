@@ -1,6 +1,7 @@
 package io.xjh.margeeview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -12,66 +13,128 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.xjh.margeeview.annotation.MsgField;
+
 /**
  * Created by xujianhua on 2016/11/18.
  */
 
-public class MarqueeView extends LinearLayout{
-    private final int newsCount;
+public class MarqueeView<T> extends LinearLayout{
+    private int newsCount;
     private ArrayList<String> newsArr=new ArrayList<>();
+    private ArrayList<T> datas=new ArrayList<>();
     private float density;
     private float textLeftPadding,textRightPadding;
-    private int textSize=10;
+    private int textSize=8;
     private boolean isinit=true;
+    private boolean isStop=false;
+    private boolean canRemove=false;
+    private boolean isFirst=true;
+    private boolean isFirstLoop=true;
+    private int translateRate=5;
+    private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what==0x12){
-                translate();
+                if(!isStop){
+                    translate();
+                    canRemove=false;
+                }else {
+                    canRemove=true;
+                }
             }
         }
     };
     private int time=0;
+    private Timer timer;
+    private float scaledDensity;
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        newsCount=3;
         init(context);
     }
 
     public MarqueeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        newsCount=3;
         init(context);
     }
     private void init(Context context) {
         density=context.getResources().getDisplayMetrics().density;
+        scaledDensity =context.getResources().getDisplayMetrics().scaledDensity;
         textLeftPadding=5;
         textRightPadding=5;
-        textSize=10;
+        translateRate=6;
+        textSize=14;
     }
-    public void setNews(){
+    public void setNews(List<T> news) throws IllegalAccessException {
         newsArr.clear();
-        newsArr.add("11111111111111111111");
-        newsArr.add("22222222222222222222");
-        newsArr.add("33333333333333333333");
-        addTextView();
+        datas.clear();
+        if(timer!=null){
+            timer.cancel();
+            timer.purge();
+            timer=null;
+        }
+        isStop=true;
+        if(news!=null){
+            newsCount=news.size();
+            datas.addAll(news);
+            for(int i=0;i<news.size();i++){
+                T t=news.get(i);
+                Class clazz=t.getClass();
+                if(clazz!=null){
+                    boolean isMsg=false;
+                    for(Field f:clazz.getFields()){
+                        for(Annotation annotation:f.getDeclaredAnnotations()){
+                            if(annotation.annotationType()==MsgField.class){
+                                isMsg=true;
+                                break;
+                            }
+                        }
+                        if(isMsg){
+                            newsArr.add(i,String.valueOf(f.get(t)));
+                            break;
+                        }
+
+                    }
+
+                }
+
+            }
+        }else {
+            newsCount=0;
+        }
+        removeAllViews();
+         addTextView();
+        isStop=false;
     }
+
+    public void setOnItemClickListener(MarqueesItemClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+
     private void addTextView(){
         for (int i=0;i<newsCount;i++){
             int width=computeTextViewWidth(newsArr.get(i));
             TextView textView= viewHolder.getTextViewFromHolder(width);
             textView.setText(newsArr.get(i));
-            addView(textView);
+            textView.setTextColor(Color.WHITE);
+            textView.setTextSize(textSize);
+            int left=computeTotalWidth(i);
+            textView.setLeft(left);
+            textView.setTag(left);
+            addView(textView,i);
+//            Log.d(MarqueeView.class.getName(),"\twidth\t"+getChildAt(i).getWidth());
         }
     }
 
@@ -82,48 +145,67 @@ public class MarqueeView extends LinearLayout{
                 handler.sendEmptyMessage(0x12);
             }
         };
-        new Timer().schedule(timerTask,200,100);
+        if(timer==null){
+            timer = new Timer();
+        }
+        timer.schedule(timerTask,100,100);
     }
     public void translate(){
         for (int i=0;i<getChildCount();i++){
             View v=getChildAt(i);
-            time++;
-//            Log.d(MarqueeView.class.getName(),"i"+i+"\t text\t"+((TextView)v).getText()+"\t translateX\t"+v.getTranslationX());
-            if (i==2&&amend(v)) break;
-            v.setTranslationX(-3* time);
-
-
+//            Log.d(MarqueeView.class.getName(),i+"\t v is null"+(v==null));
+            if (i==(getChildCount()-1)&&amend(v)) break;
+            if(v!=null){
+                v.setTranslationX(-translateRate* time);
+            }
+//            Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft());
         }
+        time++;
 
 
     }
 
     private boolean amend(View v) {
-        if(Math.abs(v.getTranslationX())>(v.getWidth()+v.getLeft())){
-            for (int i=0;i<getChildCount();i++){
-                View view=getChildAt(i);
-                int width=view.getWidth();
-                view.setLeft(getWidth()+(int)view.getTag());
-                view.setRight(view.getLeft()+width);
-                view.setTranslationX(0);
-                Log.d(MarqueeView.class.getName(),"i"+i+"\t tag\t"+(int)(view.getTag())+"\t  width\t"+view.getWidth());
+        if(v==null){
+             Log.d(MarqueeView.class.getName(),"v is null"+(v==null));
+            return false;
+        }
+        boolean isAmend=false;
+        Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft()+"\t translateX"+v.getTranslationX()+"parent width"+getWidth());
+        isAmend=-v.getTranslationX()>v.getWidth()+v.getLeft();
+        if(isAmend){
+            if(isFirst){
+                isFirst=false;
             }
-            time=0;
+            handler.removeMessages(0x12);
+            time=-getWidth()/translateRate;
+            for (int i=0;i<getChildCount();i++){
+                View child=getChildAt(i);
+                if(child!=null){
+                    TextView view=(TextView)child;
+                    if(view!=null){
+                        view.setTranslationX(getWidth());
+//                        Log.d(MarqueeView.class.getName(),"i"+i+"\t  tranlateX\t"+view.getTranslationX()+"\t left\t"+view.getLeft());
+                    }
+                }
+
+            }
             return true;
         }
         return false;
     }
 
-    public int computeTotalWidth(){
+    public int computeTotalWidth(int to){
         int sum=0;
-        for(String s:newsArr){
-            sum=+computeTextViewWidth(s);
+        if(to>newsArr.size()) to=newsArr.size();
+        for(int i=0;i<to;i++ ){
+            sum+=computeTextViewWidth(newsArr.get(i));
         }
         return sum;
     }
-    public int  computeTextViewWidth(String s){
+    public int  computeTextViewWidth(CharSequence s){
         if(!TextUtils.isEmpty(s)){
-            float v=(s.length()*textSize+textLeftPadding+textRightPadding)*density;
+            float v=s.length()*textSize*scaledDensity+(textLeftPadding+textRightPadding)*density;
             return (int)v ;
         }
         return 0;
@@ -135,7 +217,7 @@ public class MarqueeView extends LinearLayout{
             view.setOnClickListener(null);
             view.setText("");
             view.setTag(0);
-            view.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT));
+            view.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT));
             views.add(views.size(),view);
         }
 
@@ -147,33 +229,51 @@ public class MarqueeView extends LinearLayout{
             }else {
                 textView=new TextView(getContext());
             }
-            textView.setGravity(Gravity.CENTER_VERTICAL);
-            LayoutParams layoutParams=new LinearLayout.LayoutParams(width,LayoutParams.MATCH_PARENT);
+            textView.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
+            LayoutParams layoutParams=new LayoutParams(width,LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(layoutParams);
             textView.setPadding((int)(textLeftPadding*density),10,(int)(textRightPadding*density),10);
             textView.setMaxLines(1);
-
             textView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(),textView.getText(),Toast.LENGTH_SHORT).show();
+                    if(clickListener!=null){
+                        int index=getTFromMsg(textView.getText().toString());
+                        clickListener.onItemClick(datas.get(index));
+                    }
                 }
             });
             return textView;
         }
     }
-
+    private int getTFromMsg(String content){
+        for(int i=0;i<newsArr.size();i++){
+            if(newsArr.get(i).equals(content)){
+                return i;
+            }
+        }
+        return -1;
+    }
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        if(isinit){
-            for (int i=0;i<getChildCount();i++){
-                View v=getChildAt(i);
-                v.setTag(v.getLeft());
-                Log.d(MarqueeView.class.getName(),"i\t"+i+"\tleft\t"+v.getLeft());
-            }
-            isinit=false;
-        }
 
+    }
+
+    public interface MarqueesItemClickListener<T>{
+        void onItemClick(T t);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    }
+
+    public void cancle(){
+        if(timer!=null){
+            timer.cancel();
+            timer.purge();
+        }
     }
 }
