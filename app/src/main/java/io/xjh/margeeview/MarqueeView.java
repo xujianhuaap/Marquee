@@ -77,6 +77,7 @@ public class MarqueeView<T> extends LinearLayout{
         textSize=14;
     }
     public void setNews(List<T> news) throws IllegalAccessException {
+        time=0;
         newsArr.clear();
         datas.clear();
         if(timer!=null){
