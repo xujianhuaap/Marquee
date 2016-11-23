@@ -8,16 +8,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.xjh.margeeview.MainActivity">
+    tools:context="io.xjh.marqueeview.MainActivity">
 
-   <io.xjh.margeeview.MarqueeView
+   <io.xjh.marqueeview.MarqueeView
        android:id="@+id/view"
        android:layout_width="match_parent"
        android:layout_height="60dp"
        android:orientation="horizontal"
        android:background="@android:color/holo_orange_dark">
 
-   </io.xjh.margeeview.MarqueeView>
+   </io.xjh.marqueeview.MarqueeView>
    <TextView
        android:id="@+id/tv_button_add"
        android:layout_width="wrap_content"

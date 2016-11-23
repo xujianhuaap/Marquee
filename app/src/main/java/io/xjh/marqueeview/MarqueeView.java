@@ -1,4 +1,4 @@
-package io.xjh.margeeview;
+package io.xjh.marqueeview;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -24,7 +24,7 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.xjh.margeeview.annotation.MsgField;
+import io.xjh.marqueeview.annotation.MsgField;
 
 /**
  * Created by xujianhua on 2016/11/18.

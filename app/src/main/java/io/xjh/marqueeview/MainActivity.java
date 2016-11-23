@@ -1,4 +1,4 @@
-package io.xjh.margeeview;
+package io.xjh.marqueeview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.xjh.margeeview.bean.Student;
+import io.xjh.marqueeview.bean.Student;
 
 public class MainActivity extends AppCompatActivity {
 
