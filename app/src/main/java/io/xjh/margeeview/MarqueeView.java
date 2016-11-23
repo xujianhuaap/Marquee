@@ -13,12 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.xjh.margeeview.annotation.MsgField;
 
@@ -205,8 +209,22 @@ public class MarqueeView<T> extends LinearLayout{
         return sum;
     }
     public int  computeTextViewWidth(CharSequence s){
+        Pattern p= Pattern.compile("[\u4e00-\u9fa5]");
+        Pattern p1=Pattern.compile("[。，？（！）]");
+        int cnt=0;
+        for (int i=0;i<s.length();i++){
+            Matcher matcher=p.matcher(s.subSequence(i,i+1));
+            if(matcher.matches()){
+                cnt++;
+            }
+            Matcher matcher1=p1.matcher(s.subSequence(i,i+1));
+            if(matcher1.matches()){
+                cnt++;
+            }
+        }
+        Toast.makeText(getContext(),""+cnt,Toast.LENGTH_SHORT).show();
         if(!TextUtils.isEmpty(s)){
-            float v=s.length()*textSize*scaledDensity+(textLeftPadding+textRightPadding)*density;
+            float v=(cnt+s.length())/2*textSize*scaledDensity+(textLeftPadding+textRightPadding)*density;
             return (int)v ;
         }
         return 0;

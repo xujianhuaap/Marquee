@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         View deleteView=findViewById(R.id.tv_button_delete);
         students = new ArrayList<>();
         for(int i=0;i<3;i++){
-            Student s=new Student("stustustustustustustustustustustustustustustustustustu"+i,23+i);
+            Student s=new Student("中国中国中国中国中国中wwwww.....,。。。。。。。。。。。。111111国中国中国中国中国中国",23+i);
             students.add(s);
         }
 
