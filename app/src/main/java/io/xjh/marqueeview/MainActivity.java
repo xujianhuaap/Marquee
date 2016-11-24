@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             view.setOnItemClickListener(new MarqueeView.MarqueesItemClickListener<Student>() {
                 @Override
                 public void onItemClick(Student o) {
-                    if(o!=null) Toast.makeText(MainActivity.this,o.toString(),Toast.LENGTH_SHORT).show();
+                    if(o!=null) Toast.makeText(MainActivity.this,o.getName(),Toast.LENGTH_SHORT).show();
                 }
             });
             view.setNews(students);

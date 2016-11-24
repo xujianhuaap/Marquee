@@ -16,6 +16,14 @@ public class Student {
         this.age = age;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
     @Override
     public String toString() {
         return "name\t"+name+"\tage\t"+age;
