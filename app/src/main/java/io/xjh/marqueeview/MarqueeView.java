@@ -1,6 +1,7 @@
 package io.xjh.marqueeview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,6 +38,7 @@ public class MarqueeView<T> extends LinearLayout{
     private float density;
     private float textLeftPadding,textRightPadding;
     private int textSize=8;
+    private int textColor;
     private boolean isinit=true;
     private boolean isStop=false;
     private boolean canRemove=false;
@@ -65,20 +67,24 @@ public class MarqueeView<T> extends LinearLayout{
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init(context,attrs);
     }
 
     public MarqueeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init(context,attrs);
     }
-    private void init(Context context) {
+    private void init(Context context,AttributeSet attrs) {
+
+        TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee_view);
         density=context.getResources().getDisplayMetrics().density;
         scaledDensity =context.getResources().getDisplayMetrics().scaledDensity;
         textLeftPadding=5;
         textRightPadding=5;
-        translateRate=6;
-        textSize=14;
+        translateRate=typedArray.getInt(R.styleable.marquee_view_translate_rate,6);
+        textSize=typedArray.getDimensionPixelSize(R.styleable.marquee_view_text_size,14);
+        textColor=typedArray.getColor(R.styleable.marquee_view_text_color,Color.WHITE);
+        typedArray.recycle();
     }
     public void setNews(List<T> news) throws IllegalAccessException {
         time=0;
@@ -133,7 +139,7 @@ public class MarqueeView<T> extends LinearLayout{
             int width=computeTextViewWidth(newsArr.get(i));
             TextView textView= viewHolder.getTextViewFromHolder(width);
             textView.setText(newsArr.get(i));
-            textView.setTextColor(Color.WHITE);
+            textView.setTextColor(textColor);
             textView.setTextSize(textSize);
             int left=computeTotalWidth(i);
             textView.setLeft(left);
