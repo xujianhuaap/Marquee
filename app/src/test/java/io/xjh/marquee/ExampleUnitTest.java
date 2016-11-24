@@ -1,4 +1,4 @@
-package io.xjh.marqueeview;
+package io.xjh.marquee;
 
 import org.junit.Test;
 

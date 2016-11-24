@@ -1,6 +1,6 @@
-package io.xjh.marqueeview.bean;
+package io.xjh.marquee.bean;
 
-import io.xjh.marqueeview.annotation.MsgField;
+import io.xjh.marquee.annotation.MsgField;
 
 /**
  * Created by xujianhua on 2016/11/22.

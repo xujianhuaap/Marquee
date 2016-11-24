@@ -1,4 +1,4 @@
-package io.xjh.marqueeview;
+package io.xjh.marquee;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

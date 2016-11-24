@@ -1,4 +1,4 @@
-package io.xjh.marqueeview;
+package io.xjh.app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +8,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.xjh.marqueeview.bean.Student;
+import io.xjh.marquee.MarqueeView;
+import io.xjh.marquee.bean.Student;
 
 public class MainActivity extends AppCompatActivity {
 

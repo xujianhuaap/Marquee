@@ -9,9 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.xjh.marqueeview.MainActivity">
+    tools:context=".MainActivity">
 
-   <io.xjh.marqueeview.MarqueeView
+   <io.xjh.marquee.MarqueeView
        android:id="@+id/view"
        android:layout_width="match_parent"
        android:layout_height="60dp"
@@ -21,7 +21,7 @@
        app:text_color="@android:color/holo_green_dark"
        android:background="@android:color/holo_orange_dark">
 
-   </io.xjh.marqueeview.MarqueeView>
+   </io.xjh.marquee.MarqueeView>
    <TextView
        android:id="@+id/tv_button_add"
        android:layout_width="wrap_content"

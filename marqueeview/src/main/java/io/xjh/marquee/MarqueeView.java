@@ -1,4 +1,4 @@
-package io.xjh.marqueeview;
+package io.xjh.marquee;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -26,7 +26,7 @@ import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.xjh.marqueeview.annotation.MsgField;
+import io.xjh.marquee.annotation.MsgField;
 
 /**
  * Created by xujianhua on 2016/11/18.
