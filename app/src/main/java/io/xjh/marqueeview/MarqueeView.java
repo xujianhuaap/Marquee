@@ -9,6 +9,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,7 +141,7 @@ public class MarqueeView<T> extends LinearLayout{
             TextView textView= viewHolder.getTextViewFromHolder(width);
             textView.setText(newsArr.get(i));
             textView.setTextColor(textColor);
-            textView.setTextSize(textSize);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
             int left=computeTotalWidth(i);
             textView.setLeft(left);
             textView.setTag(left);
@@ -230,7 +231,7 @@ public class MarqueeView<T> extends LinearLayout{
         }
         Toast.makeText(getContext(),""+cnt,Toast.LENGTH_SHORT).show();
         if(!TextUtils.isEmpty(s)){
-            float v=(cnt+s.length())/2*textSize*scaledDensity+(textLeftPadding+textRightPadding)*density;
+            float v=(cnt+s.length())/2*textSize+(textLeftPadding+textRightPadding)*density;
             return (int)v ;
         }
         return 0;

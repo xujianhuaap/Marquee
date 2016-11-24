@@ -17,7 +17,7 @@
        android:layout_height="60dp"
        android:orientation="horizontal"
        app:translate_rate="6"
-       app:text_size="14dp"
+       app:text_size="14sp"
        app:text_color="@android:color/holo_green_dark"
        android:background="@android:color/holo_orange_dark">
 
