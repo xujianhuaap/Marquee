@@ -1,4 +1,4 @@
-package io.xjh.marquee.bean;
+package io.xjh.app.bean;
 
 import io.xjh.marquee.annotation.MsgField;
 

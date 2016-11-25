@@ -96,7 +96,7 @@ public class MarqueeView<T> extends LinearLayout{
                 Class clazz=t.getClass();
                 if(clazz!=null){
                     boolean isMsg=false;
-                    for(Field f:clazz.getFields()){
+                    for(Field f:clazz.getDeclaredFields()){
                         for(Annotation annotation:f.getDeclaredAnnotations()){
                             if(annotation.annotationType()==MsgField.class){
                                 isMsg=true;
@@ -141,6 +141,7 @@ public class MarqueeView<T> extends LinearLayout{
     }
 
     public void startScroll(){
+        Toast.makeText(getContext(),""+newsCount+"\t\t"+newsArr.get(0),Toast.LENGTH_SHORT).show();
         TimerTask timerTask=new TimerTask() {
             @Override
             public void run() {

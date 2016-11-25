@@ -11,11 +11,20 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        releaseConfig {
+            keyAlias 'xjh'
+            keyPassword 'xjh123456'
+            storeFile file('\\xjh.keystore.jks')
+            storePassword 'xjh123456'
+        }
+    }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+            shrinkResources false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
     }
 }

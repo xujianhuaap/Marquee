@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class io.xjh.marquee.annotation.MsgField{*;}
+-keep class io.xjh.app.bean.Student{*;}
+-keep class io.xjh.marquee.MarqueeView{*;}
+-keepattributes *Annotation*
