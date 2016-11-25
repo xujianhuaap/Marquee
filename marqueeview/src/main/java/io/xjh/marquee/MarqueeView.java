@@ -40,11 +40,8 @@ public class MarqueeView<T> extends LinearLayout{
     private float textLeftPadding,textRightPadding;
     private int textSize=8;
     private int textColor;
-    private boolean isinit=true;
     private boolean isStop=false;
-    private boolean canRemove=false;
     private boolean isFirst=true;
-    private boolean isFirstLoop=true;
     private int translateRate=5;
     private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
@@ -55,16 +52,12 @@ public class MarqueeView<T> extends LinearLayout{
             if(msg.what==0x12){
                 if(!isStop){
                     translate();
-                    canRemove=false;
-                }else {
-                    canRemove=true;
                 }
             }
         }
     };
     private int time=0;
     private Timer timer;
-    private float scaledDensity;
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -79,7 +72,6 @@ public class MarqueeView<T> extends LinearLayout{
 
         TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee_view);
         density=context.getResources().getDisplayMetrics().density;
-        scaledDensity =context.getResources().getDisplayMetrics().scaledDensity;
         textLeftPadding=5;
         textRightPadding=5;
         translateRate=typedArray.getInt(R.styleable.marquee_view_translate_rate,6);
@@ -88,7 +80,6 @@ public class MarqueeView<T> extends LinearLayout{
         typedArray.recycle();
     }
     public void setNews(List<T> news) throws IllegalAccessException {
-        time=0;
         newsArr.clear();
         datas.clear();
         if(timer!=null){
@@ -126,7 +117,7 @@ public class MarqueeView<T> extends LinearLayout{
             newsCount=0;
         }
         removeAllViews();
-         addTextView();
+        addTextView();
         isStop=false;
     }
 
@@ -139,7 +130,6 @@ public class MarqueeView<T> extends LinearLayout{
         for (int i=0;i<newsCount;i++){
             int width=computeTextViewWidth(newsArr.get(i));
             TextView textView= viewHolder.getTextViewFromHolder(width);
-            textView.setText(newsArr.get(i));
             textView.setTextColor(textColor);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
             int left=computeTotalWidth(i);
@@ -154,7 +144,10 @@ public class MarqueeView<T> extends LinearLayout{
         TimerTask timerTask=new TimerTask() {
             @Override
             public void run() {
-                handler.sendEmptyMessage(0x12);
+
+                    handler.sendEmptyMessage(0x12);
+
+
             }
         };
         if(timer==null){
@@ -163,6 +156,13 @@ public class MarqueeView<T> extends LinearLayout{
         timer.schedule(timerTask,100,100);
     }
     public void translate(){
+        if(time==0||time==-getWidth()/translateRate){
+            for(int i=0;i<getChildCount();i++){
+                TextView tv=(TextView) getChildAt(i);
+                tv.setText(newsArr.get(i));
+            }
+        }
+
         for (int i=0;i<getChildCount();i++){
             View v=getChildAt(i);
 //            Log.d(MarqueeView.class.getName(),i+"\t v is null"+(v==null));
@@ -183,7 +183,7 @@ public class MarqueeView<T> extends LinearLayout{
             return false;
         }
         boolean isAmend=false;
-        Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft()+"\t translateX"+v.getTranslationX()+"parent width"+getWidth());
+//        Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft()+"\t translateX"+v.getTranslationX()+"parent width"+getWidth());
         isAmend=-v.getTranslationX()>v.getWidth()+v.getLeft();
         if(isAmend){
             if(isFirst){
@@ -283,7 +283,8 @@ public class MarqueeView<T> extends LinearLayout{
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-
+        time=-getWidth()/translateRate;
+        Log.d(MarqueeView.class.getName(),"time\t:"+time+"\t childCount"+getChildCount());
     }
 
     public interface MarqueesItemClickListener<T>{
