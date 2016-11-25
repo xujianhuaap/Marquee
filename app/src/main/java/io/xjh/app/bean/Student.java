@@ -8,8 +8,8 @@ import io.xjh.marquee.annotation.MsgField;
 
 public class Student {
     @MsgField("Student")
-    String name;
-    int age;
+    public String name;
+    public int age;
 
     public Student(String name, int age) {
         this.name = name;
