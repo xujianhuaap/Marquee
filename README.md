@@ -32,3 +32,31 @@ dependencies {
         }
 
 ```
+
+3. 声明实体类
+
+```
+	public class Student {
+		@MsgField("Student") //要显示的字段
+		public String name;//该字段必须是public 访问权限
+		public int age;
+
+		public Student(String name, int age) {
+			this.name = name;
+			this.age = age;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public int getAge() {
+			return age;
+		}
+
+		@Override
+		public String toString() {
+			return "name\t"+name+"\tage\t"+age;
+		}
+	}
+```
