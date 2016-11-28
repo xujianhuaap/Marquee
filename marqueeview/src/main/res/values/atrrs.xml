@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="marquee_view" >
-        <attr name="text_color" format="color"></attr>
-        <attr name="translate_rate" format="integer"></attr>
-        <attr name="text_size" format="dimension"></attr>
+    <declare-styleable name="marquee" >
+        <attr name="view_text_color" format="color"></attr>
+        <attr name="view_translate_rate" format="integer"></attr>
+        <attr name="view_text_size" format="dimension"></attr>
     </declare-styleable>
 </resources>

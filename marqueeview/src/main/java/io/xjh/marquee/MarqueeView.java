@@ -70,7 +70,7 @@ public class MarqueeView<T> extends LinearLayout{
     }
     private void init(Context context,AttributeSet attrs) {
 
-        TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee_view);
+        TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee);
         density=context.getResources().getDisplayMetrics().density;
         textLeftPadding=5;
         textRightPadding=5;
@@ -141,7 +141,7 @@ public class MarqueeView<T> extends LinearLayout{
     }
 
     public void startScroll(){
-        Toast.makeText(getContext(),""+newsCount+"\t\t"+newsArr.get(0),Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(),""+newsCount+"\t\t"+newsArr.get(0),Toast.LENGTH_SHORT).show();
         TimerTask timerTask=new TimerTask() {
             @Override
             public void run() {
@@ -230,7 +230,6 @@ public class MarqueeView<T> extends LinearLayout{
                 cnt++;
             }
         }
-        Toast.makeText(getContext(),""+cnt,Toast.LENGTH_SHORT).show();
         if(!TextUtils.isEmpty(s)){
             float v=(cnt+s.length())/2*textSize+(textLeftPadding+textRightPadding)*density;
             return (int)v ;
