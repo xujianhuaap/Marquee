@@ -41,7 +41,7 @@ public class MarqueeView<T> extends LinearLayout{
     private int textSize=8;
     private int textColor;
     private boolean isStop=false;
-    private boolean isFirst=true;
+    private boolean initWidth=true;
     private int translateRate=5;
     private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
@@ -88,6 +88,7 @@ public class MarqueeView<T> extends LinearLayout{
             timer=null;
         }
         isStop=true;
+        initWidth=true;
         if(news!=null){
             newsCount=news.size();
             datas.addAll(news);
@@ -187,9 +188,6 @@ public class MarqueeView<T> extends LinearLayout{
 //        Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft()+"\t translateX"+v.getTranslationX()+"parent width"+getWidth());
         isAmend=-v.getTranslationX()>v.getWidth()+v.getLeft();
         if(isAmend){
-            if(isFirst){
-                isFirst=false;
-            }
             handler.removeMessages(0x12);
             time=-getWidth()/translateRate;
             for (int i=0;i<getChildCount();i++){
@@ -283,7 +281,11 @@ public class MarqueeView<T> extends LinearLayout{
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        time=-getWidth()/translateRate;
+        if(initWidth){
+            time=-getWidth()/translateRate;
+            initWidth=false;
+        }
+
         Log.d(MarqueeView.class.getName(),"time\t:"+time+"\t childCount"+getChildCount());
     }
 
@@ -294,7 +296,6 @@ public class MarqueeView<T> extends LinearLayout{
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
     }
 
     public void cancle(){
