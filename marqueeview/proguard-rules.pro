@@ -19,4 +19,5 @@
 -keep class io.xjh.marquee.annotation.MsgField{*;}
 -keep class io.xjh.app.bean.Student{*;}
 -keep class io.xjh.marquee.MarqueeView{*;}
+-keep
 -keepattributes *Annotation*

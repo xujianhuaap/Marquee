@@ -6,3 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+keystore/
+libs/
+src/main/res/drawable/

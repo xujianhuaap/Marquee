@@ -43,6 +43,8 @@ public class MarqueeView<T> extends LinearLayout{
     private boolean isStop=false;
     private boolean initWidth=true;
     private int translateRate=5;
+    private boolean isBootFirst=true;
+    private boolean isBootSecond=true;
     private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
@@ -57,7 +59,9 @@ public class MarqueeView<T> extends LinearLayout{
         }
     };
     private int time=0;
+    private int time1=0;
     private Timer timer;
+    private int screenWidth;
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -72,6 +76,7 @@ public class MarqueeView<T> extends LinearLayout{
 
         TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee);
         density=context.getResources().getDisplayMetrics().density;
+        screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         textLeftPadding=5;
         textRightPadding=5;
         translateRate=typedArray.getInt(R.styleable.marquee_view_translate_rate,6);
@@ -80,6 +85,8 @@ public class MarqueeView<T> extends LinearLayout{
         typedArray.recycle();
     }
     public void setNews(List<T> news) throws IllegalAccessException {
+        time=0;
+        time1=0;
         newsArr.clear();
         datas.clear();
         if(timer!=null){
@@ -118,7 +125,10 @@ public class MarqueeView<T> extends LinearLayout{
             newsCount=0;
         }
         removeAllViews();
+        //添加两组以备做循环操作
         addTextView();
+        addTextView();
+
         isStop=false;
     }
 
@@ -158,54 +168,85 @@ public class MarqueeView<T> extends LinearLayout{
         timer.schedule(timerTask,100,100);
     }
     public void translate(){
-        if(time==0||time==-getWidth()/translateRate){
+        if(time==0){
             for(int i=0;i<getChildCount();i++){
                 TextView tv=(TextView) getChildAt(i);
-                tv.setText(newsArr.get(i));
+                if(newsCount!=0){
+                    tv.setText(newsArr.get(i%newsCount));
+                }
             }
         }
 
+        int statusFirst=getViewGroupStatus(1);
+        int statusSecond=getViewGroupStatus(2);
+        if(statusFirst==1){
+            //启动第二组
+            isBootSecond=true;
+        }else if(statusFirst==2){
+            //初始化第一组的状态
+            isBootFirst=false;
+            time=-getWidth()/translateRate;
+            for(int i=0;i<newsCount;i++){
+                TextView tv=(TextView) getChildAt(i);
+                tv.setTranslationX(getWidth());
+            }
+        }
+        if(statusSecond==1){
+            //启动第一组
+            isBootFirst=true;
+        }else if(statusSecond==2){
+            //初始化第二组的状态
+            isBootSecond=false;
+            time1=(getChildAt(newsCount).getLeft()-screenWidth)/translateRate;
+            for(int i=newsCount;i<newsCount*2;i++){
+                TextView tv=(TextView) getChildAt(i);
+                tv.setTranslationX(getWidth());
+            }
+        }
+
+        Log.d(MarqueeView.class.getName(),"statusFirst\t"+statusFirst+"\ttime\t"+time+"\tstatusSecond\t"+statusSecond+"\ttime1\t"+time1);
         for (int i=0;i<getChildCount();i++){
             View v=getChildAt(i);
-//            Log.d(MarqueeView.class.getName(),i+"\t v is null"+(v==null));
-            if (i==(getChildCount()-1)&&amend(v)) break;
             if(v!=null){
-                v.setTranslationX(-translateRate* time);
-            }
-//            Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft());
-        }
-        time++;
-
-
-    }
-
-    private boolean amend(View v) {
-        if(v==null){
-             Log.d(MarqueeView.class.getName(),"v is null"+(v==null));
-            return false;
-        }
-        boolean isAmend=false;
-//        Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft()+"\t translateX"+v.getTranslationX()+"parent width"+getWidth());
-        isAmend=-v.getTranslationX()>v.getWidth()+v.getLeft();
-        if(isAmend){
-            handler.removeMessages(0x12);
-            time=-getWidth()/translateRate;
-            for (int i=0;i<getChildCount();i++){
-                View child=getChildAt(i);
-                if(child!=null){
-                    TextView view=(TextView)child;
-                    if(view!=null){
-                        view.setTranslationX(getWidth());
-//                        Log.d(MarqueeView.class.getName(),"i"+i+"\t  tranlateX\t"+view.getTranslationX()+"\t left\t"+view.getLeft());
-                    }
+                if(i<newsCount){
+                    v.setTranslationX(-translateRate* time);
+                }else {
+                    v.setTranslationX(-translateRate* time1);
                 }
 
             }
-            return true;
+//            Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft());
         }
-        return false;
+        if(isBootFirst){
+            time++;
+        }
+        if(isBootSecond){
+            time1++;
+        }
+
+
+
     }
 
+    /***
+     *
+     * @param groupIndex  组的编号
+     * @return 1 : 头不可见 2 : 尾不可见
+     */
+    public int getViewGroupStatus(int groupIndex){
+        View view=getChildAt(newsCount*groupIndex-1);
+        if(view!=null){
+            float translateX=view.getTranslationX();
+            if(-translateX>view.getLeft()){
+                if(-translateX>view.getLeft()+view.getWidth()){
+                    return 2;
+                }
+                return 1;
+            }
+
+        }
+        return 0;
+    }
     public int computeTotalWidth(int to){
         int sum=0;
         if(to>newsArr.size()) to=newsArr.size();

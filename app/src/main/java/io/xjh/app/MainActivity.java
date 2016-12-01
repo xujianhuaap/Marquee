@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         View addView=findViewById(R.id.tv_button_add);
         View deleteView=findViewById(R.id.tv_button_delete);
         students = new ArrayList<>();
-        for(int i=0;i<3;i++){
+        for(int i=0;i<2;i++){
             Student s=new Student("河出伏流，一泻汪洋。鹰隼肆翼，喷薄吸张。旭日东升，其道大光。",23+i);
             students.add(s);
         }
