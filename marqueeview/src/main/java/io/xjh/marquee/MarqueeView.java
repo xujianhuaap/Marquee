@@ -85,7 +85,7 @@ public class MarqueeView<T> extends LinearLayout{
         typedArray.recycle();
     }
     public void setNews(List<T> news) throws IllegalAccessException {
-        time=0;
+        time=-getWidth()/translateRate;
         time1=0;
         newsArr.clear();
         datas.clear();
@@ -143,10 +143,7 @@ public class MarqueeView<T> extends LinearLayout{
             TextView textView= viewHolder.getTextViewFromHolder(width);
             textView.setTextColor(textColor);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
-            int left=computeTotalWidth(i);
-            textView.setLeft(left);
-            textView.setTag(left);
-            addView(textView,i);
+            addView(textView);
 //            Log.d(MarqueeView.class.getName(),"\twidth\t"+getChildAt(i).getWidth());
         }
     }
@@ -168,7 +165,8 @@ public class MarqueeView<T> extends LinearLayout{
         timer.schedule(timerTask,100,100);
     }
     public void translate(){
-        if(time==0){
+        if(time==0||time==-getWidth()/translateRate){
+            time1=(getChildAt(newsCount).getLeft()-getWidth())/translateRate;
             for(int i=0;i<getChildCount();i++){
                 TextView tv=(TextView) getChildAt(i);
                 if(newsCount!=0){
@@ -197,10 +195,10 @@ public class MarqueeView<T> extends LinearLayout{
         }else if(statusSecond==2){
             //初始化第二组的状态
             isBootSecond=false;
-            time1=(getChildAt(newsCount).getLeft()-screenWidth)/translateRate;
+            time1=(getChildAt(newsCount).getLeft()-getWidth())/translateRate;
             for(int i=newsCount;i<newsCount*2;i++){
                 TextView tv=(TextView) getChildAt(i);
-                tv.setTranslationX(getWidth());
+                tv.setTranslationX(0);
             }
         }
 
