@@ -45,6 +45,7 @@ public class MarqueeView<T> extends LinearLayout{
     private int translateRate=5;
     private boolean isBootFirst=true;
     private boolean isBootSecond=false;
+    private boolean isLoop=false;
     private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
@@ -130,9 +131,13 @@ public class MarqueeView<T> extends LinearLayout{
         }
         removeAllViews();
         //添加两组以备做循环操作
-        addTextView(1);
-        addTextView(2);
-
+        isLoop=computeTotalWidth(newsCount)>getWidth();
+        if(isLoop){
+            addTextView(1);
+            addTextView(2);
+        }else {
+            addTextView(1);
+        }
         isStop=false;
     }
 
@@ -180,66 +185,70 @@ public class MarqueeView<T> extends LinearLayout{
                 }
             }
         }
-        firstGroupStatus = getViewStailStatus(1);
-        secondGroupStatus = getViewStailStatus(2);
-        if(firstGroupStatus ==1){
-            //第一组尾部已经可见 启动第二组
-            if(firstLastGroupStatus==0){
-                isBootSecond=true;
-                time1=(-getWidth()+computeTotalWidth(newsCount))/translateRate;
+
+        if(isLoop){
+            firstGroupStatus = getViewStailStatus(1);
+            secondGroupStatus = getViewStailStatus(2);
+            if(firstGroupStatus ==1){
+                //第一组尾部已经可见 启动第二组
+                if(firstLastGroupStatus==0){
+                    isBootSecond=true;
+                    time1=(-getWidth()+computeTotalWidth(newsCount))/translateRate;
+                }
+
+            }else if(firstGroupStatus ==2){
+                //第一组尾部已经右不可见  初始化第一组的状态
+                if(firstLastGroupStatus==1){
+                    isBootFirst=false;
+                    time=-getWidth()/translateRate;
+                    for(int i=0;i<newsCount;i++){
+                        TextView tv=(TextView) getChildAt(i);
+                        tv.setTranslationX(getWidth());
+                    }
+                }
+
             }
 
-        }else if(firstGroupStatus ==2){
-            //第一组尾部已经右不可见  初始化第一组的状态
-            if(firstLastGroupStatus==1){
-                isBootFirst=false;
-                time=-getWidth()/translateRate;
-                for(int i=0;i<newsCount;i++){
-                    TextView tv=(TextView) getChildAt(i);
-                    tv.setTranslationX(getWidth());
+            if(secondGroupStatus ==1){
+                //启动第一组
+                if(secondLastGroupStatus==0){
+                    isBootFirst=true;
+                    time=-getWidth()/translateRate;
+                }
+
+            }else if(secondGroupStatus ==2){
+                //初始化第二组的状态
+                if(secondLastGroupStatus==1){
+                    isBootSecond=false;
+                    time1=(-getWidth()+computeTotalWidth(newsCount))/translateRate;
+                    for(int i=newsCount;i<newsCount*2;i++){
+                        TextView tv=(TextView) getChildAt(i);
+                        tv.setTranslationX(getWidth()-computeTotalWidth(newsCount));
+                    }
+                }
+
+            }
+            if(isBootFirst){
+                time++;
+            }
+            if(isBootSecond){
+                time1++;
+            }
+            for (int i=0;i<getChildCount();i++){
+                View v=getChildAt(i);
+                if(v!=null){
+                    if(i>=newsCount){
+                        v.setTranslationX(-time1*translateRate);
+                    }else {
+                        v.setTranslationX(-time*translateRate);
+                    }
                 }
             }
-
+            firstLastGroupStatus=firstGroupStatus;
+            secondLastGroupStatus=secondGroupStatus;
+            Log.d(MarqueeView.class.getName()," isBootFirst\t"+isBootFirst+"\tisBootSecond\t"+isBootSecond+"\ttime1\t"+time1+"\t time\t"+time);
         }
 
-        if(secondGroupStatus ==1){
-            //启动第一组
-            if(secondLastGroupStatus==0){
-                isBootFirst=true;
-                time=-getWidth()/translateRate;
-            }
-
-        }else if(secondGroupStatus ==2){
-            //初始化第二组的状态
-            if(secondLastGroupStatus==1){
-                isBootSecond=false;
-                time1=(-getWidth()+computeTotalWidth(newsCount))/translateRate;
-                for(int i=newsCount;i<newsCount*2;i++){
-                    TextView tv=(TextView) getChildAt(i);
-                    tv.setTranslationX(getWidth()-computeTotalWidth(newsCount));
-                }
-            }
-
-        }
-        if(isBootFirst){
-            time++;
-        }
-        if(isBootSecond){
-            time1++;
-        }
-        for (int i=0;i<getChildCount();i++){
-            View v=getChildAt(i);
-            if(v!=null){
-                if(i>=newsCount){
-                    v.setTranslationX(-time1*translateRate);
-                }else {
-                    v.setTranslationX(-time*translateRate);
-                }
-            }
-        }
-        firstLastGroupStatus=firstGroupStatus;
-        secondLastGroupStatus=secondGroupStatus;
-        Log.d(MarqueeView.class.getName()," isBootFirst\t"+isBootFirst+"\tisBootSecond\t"+isBootSecond+"\ttime1\t"+time1+"\t time\t"+time);
 
     }
 
@@ -365,7 +374,12 @@ public class MarqueeView<T> extends LinearLayout{
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         if(initWidth){
-            time=-getWidth()/translateRate;
+            if(isLoop){
+                time=-getWidth()/translateRate;
+            }else {
+                time=0;
+            }
+
             initWidth=false;
         }
 
