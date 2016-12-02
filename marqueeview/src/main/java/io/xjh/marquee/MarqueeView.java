@@ -62,7 +62,6 @@ public class MarqueeView<T> extends LinearLayout{
     private int time=0;
     private int time1=0;
     private Timer timer;
-    private int screenWidth;
     private int firstGroupStatus;
     private int secondGroupStatus;
     private int firstLastGroupStatus=-1;
@@ -81,7 +80,6 @@ public class MarqueeView<T> extends LinearLayout{
 
         TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee);
         density=context.getResources().getDisplayMetrics().density;
-        screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         textLeftPadding=5;
         textRightPadding=5;
         translateRate=typedArray.getInt(R.styleable.marquee_view_translate_rate,6);
