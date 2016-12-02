@@ -238,7 +238,7 @@ public class MarqueeView<T> extends LinearLayout{
             }
         }
         firstLastGroupStatus=firstGroupStatus;
-        secondLastGroupStatus=secondLastGroupStatus;
+        secondLastGroupStatus=secondGroupStatus;
         Log.d(MarqueeView.class.getName()," isBootFirst\t"+isBootFirst+"\tisBootSecond\t"+isBootSecond+"\ttime1\t"+time1+"\t time\t"+time);
 
     }
