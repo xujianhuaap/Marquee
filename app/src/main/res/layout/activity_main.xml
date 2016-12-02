@@ -16,7 +16,7 @@
        android:layout_width="match_parent"
        android:layout_height="60dp"
        android:orientation="horizontal"
-       app:view_translate_rate="6"
+       app:view_translate_rate="9"
        app:view_text_size="14sp"
        app:view_text_color="@android:color/holo_green_dark"
        android:background="@android:color/holo_orange_dark">

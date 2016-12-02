@@ -44,7 +44,7 @@ public class MarqueeView<T> extends LinearLayout{
     private boolean initWidth=true;
     private int translateRate=5;
     private boolean isBootFirst=true;
-    private boolean isBootSecond=true;
+    private boolean isBootSecond=false;
     private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
@@ -62,6 +62,10 @@ public class MarqueeView<T> extends LinearLayout{
     private int time1=0;
     private Timer timer;
     private int screenWidth;
+    private int firstGroupStatus;
+    private int secondGroupStatus;
+    private int firstLastGroupStatus=-1;
+    private int secondLastGroupStatus=-1;
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -85,7 +89,7 @@ public class MarqueeView<T> extends LinearLayout{
         typedArray.recycle();
     }
     public void setNews(List<T> news) throws IllegalAccessException {
-        time=-getWidth()/translateRate;
+        time=0;
         time1=0;
         newsArr.clear();
         datas.clear();
@@ -126,8 +130,8 @@ public class MarqueeView<T> extends LinearLayout{
         }
         removeAllViews();
         //添加两组以备做循环操作
-        addTextView();
-        addTextView();
+        addTextView(1);
+        addTextView(2);
 
         isStop=false;
     }
@@ -136,14 +140,17 @@ public class MarqueeView<T> extends LinearLayout{
         this.clickListener = clickListener;
     }
 
-
-    private void addTextView(){
+    /***
+     *
+     * @param groupIndex >1
+     */
+    private void addTextView(int groupIndex){
         for (int i=0;i<newsCount;i++){
             int width=computeTextViewWidth(newsArr.get(i));
             TextView textView= viewHolder.getTextViewFromHolder(width);
             textView.setTextColor(textColor);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
-            addView(textView);
+            addView(textView,i+(groupIndex-1)*newsCount);
 //            Log.d(MarqueeView.class.getName(),"\twidth\t"+getChildAt(i).getWidth());
         }
     }
@@ -166,7 +173,6 @@ public class MarqueeView<T> extends LinearLayout{
     }
     public void translate(){
         if(time==0||time==-getWidth()/translateRate){
-            time1=(getChildAt(newsCount).getLeft()-getWidth())/translateRate;
             for(int i=0;i<getChildCount();i++){
                 TextView tv=(TextView) getChildAt(i);
                 if(newsCount!=0){
@@ -174,46 +180,46 @@ public class MarqueeView<T> extends LinearLayout{
                 }
             }
         }
-
-        int statusFirst=getViewGroupStatus(1);
-        int statusSecond=getViewGroupStatus(2);
-        if(statusFirst==1){
-            //启动第二组
-            isBootSecond=true;
-        }else if(statusFirst==2){
-            //初始化第一组的状态
-            isBootFirst=false;
-            time=-getWidth()/translateRate;
-            for(int i=0;i<newsCount;i++){
-                TextView tv=(TextView) getChildAt(i);
-                tv.setTranslationX(getWidth());
+        firstGroupStatus = getViewStailStatus(1);
+        secondGroupStatus = getViewStailStatus(2);
+        if(firstGroupStatus ==1){
+            //第一组尾部已经可见 启动第二组
+            if(firstLastGroupStatus==0){
+                isBootSecond=true;
+                time1=(-getWidth()+computeTotalWidth(newsCount))/translateRate;
             }
-        }
-        if(statusSecond==1){
-            //启动第一组
-            isBootFirst=true;
-        }else if(statusSecond==2){
-            //初始化第二组的状态
-            isBootSecond=false;
-            time1=(getChildAt(newsCount).getLeft()-getWidth())/translateRate;
-            for(int i=newsCount;i<newsCount*2;i++){
-                TextView tv=(TextView) getChildAt(i);
-                tv.setTranslationX(0);
-            }
-        }
 
-        Log.d(MarqueeView.class.getName(),"statusFirst\t"+statusFirst+"\ttime\t"+time+"\tstatusSecond\t"+statusSecond+"\ttime1\t"+time1);
-        for (int i=0;i<getChildCount();i++){
-            View v=getChildAt(i);
-            if(v!=null){
-                if(i<newsCount){
-                    v.setTranslationX(-translateRate* time);
-                }else {
-                    v.setTranslationX(-translateRate* time1);
+        }else if(firstGroupStatus ==2){
+            //第一组尾部已经右不可见  初始化第一组的状态
+            if(firstLastGroupStatus==1){
+                isBootFirst=false;
+                time=-getWidth()/translateRate;
+                for(int i=0;i<newsCount;i++){
+                    TextView tv=(TextView) getChildAt(i);
+                    tv.setTranslationX(getWidth());
                 }
-
             }
-//            Log.d(MarqueeView.class.getName(),"v width\t"+v.getWidth()+"\tleft\t"+v.getLeft());
+
+        }
+
+        if(secondGroupStatus ==1){
+            //启动第一组
+            if(secondLastGroupStatus==0){
+                isBootFirst=true;
+                time=-getWidth()/translateRate;
+            }
+
+        }else if(secondGroupStatus ==2){
+            //初始化第二组的状态
+            if(secondLastGroupStatus==1){
+                isBootSecond=false;
+                time1=(-getWidth()+computeTotalWidth(newsCount))/translateRate;
+                for(int i=newsCount;i<newsCount*2;i++){
+                    TextView tv=(TextView) getChildAt(i);
+                    tv.setTranslationX(getWidth()-computeTotalWidth(newsCount));
+                }
+            }
+
         }
         if(isBootFirst){
             time++;
@@ -221,29 +227,67 @@ public class MarqueeView<T> extends LinearLayout{
         if(isBootSecond){
             time1++;
         }
-
-
+        for (int i=0;i<getChildCount();i++){
+            View v=getChildAt(i);
+            if(v!=null){
+                if(i>=newsCount){
+                    v.setTranslationX(-time1*translateRate);
+                }else {
+                    v.setTranslationX(-time*translateRate);
+                }
+            }
+        }
+        firstLastGroupStatus=firstGroupStatus;
+        secondLastGroupStatus=secondLastGroupStatus;
+        Log.d(MarqueeView.class.getName()," isBootFirst\t"+isBootFirst+"\tisBootSecond\t"+isBootSecond+"\ttime1\t"+time1+"\t time\t"+time);
 
     }
 
     /***
      *
      * @param groupIndex  组的编号
-     * @return 1 : 头不可见 2 : 尾不可见
+     * @return 0 : 头右不可见 1 : 头可见   2:头左不可见 不可见 3:头可见 4: 尾可见
      */
-    public int getViewGroupStatus(int groupIndex){
+    public int getViewHeadStatus(int groupIndex){
         View view=getChildAt(newsCount*groupIndex-1);
         if(view!=null){
             float translateX=view.getTranslationX();
-            if(-translateX>view.getLeft()){
-                if(-translateX>view.getLeft()+view.getWidth()){
+            if(translateX+view.getLeft()>getWidth()){
+                return 0;
+            }else {
+                if(translateX+view.getLeft()>0){
+                    return 1;
+                }else {
                     return 2;
                 }
-                return 1;
             }
-
+        }else {
+            return 0;
         }
-        return 0;
+    }
+    /***
+     *
+     * @param groupIndex  组的编号
+     * @return 0 : 尾右不可见 1 : 尾可见   2:尾左不可见
+     */
+    public int getViewStailStatus(int groupIndex){
+        View view=getChildAt(newsCount*groupIndex-1);
+
+        if(view!=null){
+//            Log.d(MarqueeView.class.getName(),"groupIndex\t:"+groupIndex+"\t left-getWidth"+(view.getLeft()-getWidth()));
+            float translateX=view.getTranslationX();
+            if(translateX+view.getLeft()+view.getWidth()>getWidth()){
+                return 0;
+            }else {
+                if(translateX+view.getLeft()+view.getWidth()>0){
+                    return 1;
+                }else {
+                    return 2;
+                }
+            }
+        }else {
+            return 0;
+        }
     }
     public int computeTotalWidth(int to){
         int sum=0;
@@ -325,7 +369,8 @@ public class MarqueeView<T> extends LinearLayout{
             initWidth=false;
         }
 
-        Log.d(MarqueeView.class.getName(),"time\t:"+time+"\t childCount"+getChildCount());
+//        Log.d(MarqueeView.class.getName(),"time\t:"+time+"\t childCount"+getChildCount());
+//        Log.d(MarqueeView.class.getName(),"left 0\t:" +getChildAt(0).getLeft()+"\t"+newsCount+"\t"+getChildAt(newsCount).getLeft()+"\t parent getWidth\t"+getWidth());
     }
 
     public interface MarqueesItemClickListener<T>{
