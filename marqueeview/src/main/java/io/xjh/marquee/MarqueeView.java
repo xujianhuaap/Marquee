@@ -90,6 +90,8 @@ public class MarqueeView<T> extends LinearLayout{
     public void setNews(List<T> news) throws IllegalAccessException {
         time=0;
         time1=0;
+        isBootFirst=true;
+        isBootSecond=false;
         newsArr.clear();
         datas.clear();
         if(timer!=null){
@@ -244,7 +246,7 @@ public class MarqueeView<T> extends LinearLayout{
             }
             firstLastGroupStatus=firstGroupStatus;
             secondLastGroupStatus=secondGroupStatus;
-            Log.d(MarqueeView.class.getName()," isBootFirst\t"+isBootFirst+"\tisBootSecond\t"+isBootSecond+"\ttime1\t"+time1+"\t time\t"+time);
+//            Log.d(MarqueeView.class.getName()," isBootFirst\t"+isBootFirst+"\tisBootSecond\t"+isBootSecond+"\ttime1\t"+time1+"\t time\t"+time);
         }
 
 
@@ -319,7 +321,7 @@ public class MarqueeView<T> extends LinearLayout{
             }
         }
         if(!TextUtils.isEmpty(s)){
-            float v=(cnt+s.length())/2*textSize+(textLeftPadding+textRightPadding)*density;
+            float v=(s.length()-cnt)/5*textSize*4+cnt*textSize+(textLeftPadding+textRightPadding)*density;
             return (int)v ;
         }
         return 0;
