@@ -2,6 +2,7 @@ package io.xjh.marquee;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,6 +47,7 @@ public class MarqueeView<T> extends LinearLayout{
     private boolean isBootFirst=true;
     private boolean isBootSecond=false;
     private boolean isLoop=false;
+    private int screenWidth;
     private MarqueesItemClickListener<T> clickListener;
     ViewHolder viewHolder=new ViewHolder();
     private Handler handler=new Handler(Looper.getMainLooper()){
@@ -80,6 +82,7 @@ public class MarqueeView<T> extends LinearLayout{
 
         TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.marquee);
         density=context.getResources().getDisplayMetrics().density;
+        screenWidth=context.getResources().getDisplayMetrics().widthPixels;
         textLeftPadding=5;
         textRightPadding=5;
         translateRate=typedArray.getInt(R.styleable.marquee_view_translate_rate,6);
@@ -131,7 +134,8 @@ public class MarqueeView<T> extends LinearLayout{
         }
         removeAllViews();
         //添加两组以备做循环操作
-        isLoop=computeTotalWidth(newsCount)>getWidth();
+        int width=screenWidth*8/10;
+        isLoop=computeTotalWidth(newsCount)>width;
         if(isLoop){
             addTextView(1);
             addTextView(2);
@@ -321,7 +325,8 @@ public class MarqueeView<T> extends LinearLayout{
             }
         }
         if(!TextUtils.isEmpty(s)){
-            float v=(s.length()-cnt)/5*textSize*4+cnt*textSize+(textLeftPadding+textRightPadding)*density;
+            float v=(s.length()-cnt)/10*textSize*9+(cnt+1)*textSize+(textLeftPadding+textRightPadding)*density;
+            Log.d("MarqueeView","digit count"+cnt+"length"+s.length());
             return (int)v ;
         }
         return 0;
@@ -401,5 +406,12 @@ public class MarqueeView<T> extends LinearLayout{
             timer.cancel();
             timer.purge();
         }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        getMeasuredWidth();
+        Log.d("MarqueeView","getMeasuredWidth()\t"+ getMeasuredWidth()+"getWidth()\t"+getWidth());
     }
 }
