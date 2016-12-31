@@ -20,7 +20,8 @@
        android:id="@+id/tab"
        android:layout_width="match_parent"
        android:layout_height="50dp"
-       android:scrollbars="none">
+       android:scrollbars="none"
+       android:fillViewport="true">
 
    </io.xjh.tablelayout.views.TableLayout>
    <TextView

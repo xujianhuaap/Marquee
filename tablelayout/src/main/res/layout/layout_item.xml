@@ -4,22 +4,22 @@
     android:orientation="vertical"
     android:minWidth="65dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/tab_height">
     <TextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/item_height"
         android:maxWidth="60dp"
         android:maxLines="1"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:gravity="center"
+        android:textSize="@dimen/text_size"
         tools:text="data1"/>
     <TextView
         android:id="@+id/item_divider"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="@dimen/divider_height"
         android:gravity="center"
-        tools:text="data1"
         android:background="@android:color/holo_orange_dark"/>
 </LinearLayout>

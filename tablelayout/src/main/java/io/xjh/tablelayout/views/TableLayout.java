@@ -61,10 +61,11 @@ public class TableLayout extends HorizontalScrollView {
                 View view =inflate(context, R.layout.layout_item,null);
                 TextView tvTitle=(TextView) view.findViewById(R.id.item_title);
                 tvTitle.setText(datas.get(i));
+                view.setTag(i);
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        refreshStatus(2);
+                        refreshStatus((int)v.getTag());
                     }
                 });
                 rootView.addView(view,i);

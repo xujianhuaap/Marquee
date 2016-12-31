@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
         datas.add("2222");
         datas.add("333333");
         datas.add("444444");
-        datas.add("666666");
-        datas.add("55555");
         tableLayout.setData(datas);
         View deleteView=findViewById(R.id.tv_button_delete);
 
