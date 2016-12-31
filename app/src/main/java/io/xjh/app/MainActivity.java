@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         List<Student> datas=new ArrayList<>();
         datas.add(new Student("借款问题",2));
         datas.add(new Student("还款问题",2));
-        datas.add(new Student("其问题",2));
-        datas.add(new Student("问题",2));
+//        datas.add(new Student("其问题",2));
+//        datas.add(new Student("问题",2));
         tableLayout.setData(datas);
         tableLayout.setCallBack(new TableLayout.CallBack() {
             @Override

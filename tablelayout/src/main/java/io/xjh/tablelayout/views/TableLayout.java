@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -32,6 +33,7 @@ public class TableLayout<D> extends HorizontalScrollView {
     private int colorDivider=Color.parseColor("#E7E6E6");
     private int colorTitle=Color.parseColor("#908f94");
     private int colorTilteSelected=Color.parseColor("#31a3EE");
+    private int screenWidth;
     public TableLayout(Context context) {
         super(context);
         init(context);
@@ -50,6 +52,7 @@ public class TableLayout<D> extends HorizontalScrollView {
 
     private void init(Context context) {
         this.context=context;
+        screenWidth=context.getResources().getDisplayMetrics().widthPixels;
         View view=inflate(context, R.layout.layout_tab,null);
         addView(view);
         this.rootView =(LinearLayout)view.findViewById(R.id.tab);
@@ -65,6 +68,7 @@ public class TableLayout<D> extends HorizontalScrollView {
             this.datas.addAll(datas);
             for (int i=0;i<datas.size();i++){
                 View view =inflate(context, R.layout.layout_item,null);
+                view.setLayoutParams(new LinearLayout.LayoutParams(screenWidth/3, ViewGroup.LayoutParams.MATCH_PARENT));
                 TextView tvTitle=(TextView) view.findViewById(R.id.item_title);
                 D data=datas.get(i);
                 if(data!=null){
