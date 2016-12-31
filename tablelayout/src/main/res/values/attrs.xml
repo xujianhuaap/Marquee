@@ -2,6 +2,9 @@
 <resources>
     <declare-styleable name="table_layout">
         <attr name="divider_color" format="color"></attr>
+        <attr name="divider_color_selected" format="color"></attr>
+        <attr name="title_color" format="color"></attr>
+        <attr name="title_color_selected" format="color"></attr>
         <attr name="item_width" format="dimension"></attr>
     </declare-styleable>
 </resources>

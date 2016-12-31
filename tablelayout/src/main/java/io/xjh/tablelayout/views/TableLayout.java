@@ -1,9 +1,11 @@
 package io.xjh.tablelayout.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -18,24 +20,25 @@ import io.xjh.tablelayout.R;
  * Created by xujianhua on 2016/12/31.
  */
 
-public class TableLayout extends ScrollView {
+public class TableLayout extends HorizontalScrollView {
     List<String> datas=new ArrayList<>();
     private Context context;
     private LinearLayout rootView;
-
+    private int colorDividerSelected=Color.parseColor("#31a3EE");
+    private int colorDivider=Color.parseColor("#E7E6E6");
+    private int colorTitle=Color.parseColor("#908f94");
+    private int colorTilteSelected=Color.parseColor("#31a3EE");
     public TableLayout(Context context) {
         super(context);
         init(context);
     }
     public TableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray typedArray=context.getResources().obtainAttributes(attrs,R.styleable.table_layout);
+        typedArray.recycle();
         init(context);
     }
 
-    public TableLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
 
 
 
@@ -51,6 +54,7 @@ public class TableLayout extends ScrollView {
     }
     public void setData(List<String>datas){
         if(datas!=null){
+            rootView.removeAllViews();
             this.datas.clear();
             this.datas.addAll(datas);
             for (int i=0;i<datas.size();i++){
@@ -75,12 +79,14 @@ public class TableLayout extends ScrollView {
             TextView tvDivider=(TextView) (rootView.getChildAt(i).findViewById(R.id.item_divider));
             TextView tvTitle=(TextView) (rootView.getChildAt(i).findViewById(R.id.item_title));
             if(selectedIndex==i){
-                tvDivider.setBackgroundColor(Color.parseColor("#31a3EE"));
-                tvTitle.setTextColor(Color.parseColor("#31a3EE"));
+                tvDivider.setBackgroundColor(colorDividerSelected);
+                tvTitle.setTextColor(colorTilteSelected);
             }else {
                 tvDivider.setBackgroundColor(Color.TRANSPARENT);
-                tvTitle.setTextColor(Color.parseColor("#908f94"));
+                tvTitle.setTextColor(colorTitle);
             }
         }
     }
+
+
 }
