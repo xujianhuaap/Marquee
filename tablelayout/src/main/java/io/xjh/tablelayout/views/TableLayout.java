@@ -10,20 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.xjh.tablelayout.R;
+import io.xjh.tablelayout.annotaions.annotation.MsgField;
 
 /**
  * Created by xujianhua on 2016/12/31.
  */
 
-public class TableLayout extends HorizontalScrollView {
-    List<String> datas=new ArrayList<>();
+public class TableLayout<D> extends HorizontalScrollView {
+    List<D> datas=new ArrayList<>();
     private Context context;
     private LinearLayout rootView;
+    private CallBack<D> callBack;
     private int colorDividerSelected=Color.parseColor("#31a3EE");
     private int colorDivider=Color.parseColor("#E7E6E6");
     private int colorTitle=Color.parseColor("#908f94");
@@ -40,7 +44,9 @@ public class TableLayout extends HorizontalScrollView {
     }
 
 
-
+    public void setCallBack(CallBack<D> callBack) {
+        this.callBack = callBack;
+    }
 
     private void init(Context context) {
         this.context=context;
@@ -52,7 +58,7 @@ public class TableLayout extends HorizontalScrollView {
     public void initViews(){
 
     }
-    public void setData(List<String>datas){
+    public void setData(final List<D>datas){
         if(datas!=null){
             rootView.removeAllViews();
             this.datas.clear();
@@ -60,12 +66,42 @@ public class TableLayout extends HorizontalScrollView {
             for (int i=0;i<datas.size();i++){
                 View view =inflate(context, R.layout.layout_item,null);
                 TextView tvTitle=(TextView) view.findViewById(R.id.item_title);
-                tvTitle.setText(datas.get(i));
+                D data=datas.get(i);
+                if(data!=null){
+                    Class clazz=data.getClass();
+                    Field[] fields=clazz.getDeclaredFields();
+                    for(Field f:fields){
+                        Annotation[] annotations=f.getAnnotations();
+                        boolean isTitle=false;
+                        for(Annotation a:annotations){
+                            if(a.annotationType()== MsgField.class){
+                              isTitle=true;
+                                break;
+                            }
+                        }
+                        if(isTitle){
+                            try {
+                                tvTitle.setText(String.valueOf(f.get(data)));
+                                break;
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+
+                }
+
+
                 view.setTag(i);
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        refreshStatus((int)v.getTag());
+                        int index=(int)v.getTag();
+                        refreshStatus(index);
+                        if(callBack!=null){
+                            callBack.onClick(datas.get(index),index);
+                        }
                     }
                 });
                 rootView.addView(view,i);
@@ -89,5 +125,7 @@ public class TableLayout extends HorizontalScrollView {
         }
     }
 
-
+    public interface CallBack<D>{
+        void onClick(D d,int index);
+    }
 }

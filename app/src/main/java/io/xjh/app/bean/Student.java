@@ -1,6 +1,7 @@
 package io.xjh.app.bean;
 
-import io.xjh.marquee.annotation.MsgField;
+
+import io.xjh.tablelayout.annotaions.annotation.MsgField;
 
 /**
  * Created by xujianhua on 2016/11/22.

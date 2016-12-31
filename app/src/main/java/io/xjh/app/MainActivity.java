@@ -3,6 +3,7 @@ package io.xjh.app;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
         io.xjh.tablelayout.views.TableLayout tableLayout=(TableLayout) findViewById(R.id.tab);
-        List<String> datas=new ArrayList<>();
-        datas.add("111111");
-        datas.add("2222");
-        datas.add("333333");
-        datas.add("444444");
+        List<Student> datas=new ArrayList<>();
+        datas.add(new Student("借款问题",2));
+        datas.add(new Student("还款问题",2));
+        datas.add(new Student("其问题",2));
+        datas.add(new Student("问题",2));
         tableLayout.setData(datas);
+        tableLayout.setCallBack(new TableLayout.CallBack() {
+            @Override
+            public void onClick(Object o, int index) {
+                Toast.makeText(MainActivity.this,"index"+index,Toast.LENGTH_SHORT).show();
+            }
+        });
         View deleteView=findViewById(R.id.tv_button_delete);
 
         deleteView.setOnClickListener(new View.OnClickListener() {
