@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="divider_color">#E7E6E6</color>
+    <color name="divider_color_selected">#31a3EE</color>
+    <color name="title_color">#908f94</color>
+</resources>

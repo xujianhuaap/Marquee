@@ -16,6 +16,12 @@
        android:layout_height="match_parent">
 
    </FrameLayout>
+   <io.xjh.tablelayout.views.TableLayout
+       android:id="@+id/tab"
+       android:layout_width="match_parent"
+       android:layout_height="50dp">
+
+   </io.xjh.tablelayout.views.TableLayout>
    <TextView
        android:id="@+id/tv_button_add"
        android:layout_width="wrap_content"

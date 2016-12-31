@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="table_layout">
+        <attr name="divider_color" format="color"></attr>
+        <attr name="item_width" format="dimension"></attr>
+    </declare-styleable>
+</resources>

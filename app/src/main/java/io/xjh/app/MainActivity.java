@@ -3,13 +3,13 @@ package io.xjh.app;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.xjh.marquee.MarqueeView;
 import io.xjh.app.bean.Student;
+import io.xjh.tablelayout.views.TableLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +20,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
+        io.xjh.tablelayout.views.TableLayout tableLayout=(TableLayout) findViewById(R.id.tab);
+        List<String> datas=new ArrayList<>();
+        datas.add("111111");
+        datas.add("2222");
+        datas.add("333333");
+        datas.add("444444");
+        tableLayout.setData(datas);
         View deleteView=findViewById(R.id.tv_button_delete);
 
         deleteView.setOnClickListener(new View.OnClickListener() {
