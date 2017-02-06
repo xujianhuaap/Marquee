@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/item_divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
+        android:layout_height="@dimen/table_layout_divider_height"
         android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

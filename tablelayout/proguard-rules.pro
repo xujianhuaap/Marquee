@@ -15,3 +15,5 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class io.xjh.tablelayout.views.TableLayout{*;}
+-keep class io.xjh.tablelayout.annotaions.annotation.MsgField{*;}
