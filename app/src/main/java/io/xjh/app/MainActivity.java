@@ -1,52 +1,90 @@
 package io.xjh.app;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+import android.util.Log;
+import android.webkit.WebView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.xjh.marquee.MarqueeView;
-import io.xjh.app.bean.Student;
-import io.xjh.tablelayout.views.TableLayout;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import io.xjh.app.data.HomeService;
+import io.xjh.app.utils.RetrofitUtil;
+import retrofit2.Call;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
-
-
-    private MarqueeView<Student> view;
+    @Bind(R.id.web)
+    WebView web;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
-        io.xjh.tablelayout.views.TableLayout tableLayout=(TableLayout) findViewById(R.id.tab);
-        List<Student> datas=new ArrayList<>();
-        datas.add(new Student("借款问题",2));
-        datas.add(new Student("还款问题",2));
-//        datas.add(new Student("其问题",2));
-//        datas.add(new Student("问题",2));
-        tableLayout.setData(datas);
-        tableLayout.setCallBack(new TableLayout.CallBack() {
+        ButterKnife.bind(this);
+        Observable.just(1,2,3).subscribe(new Subscriber<Integer>() {
             @Override
-            public void onClick(Object o, int index) {
-                Toast.makeText(MainActivity.this,"index"+index,Toast.LENGTH_SHORT).show();
-            }
-        });
-        View deleteView=findViewById(R.id.tv_button_delete);
+            public void onCompleted() {
 
-        deleteView.setOnClickListener(new View.OnClickListener() {
+            }
+
             @Override
-            public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.container,new MainFragment()).commit();
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.i(MainActivity.class.getName(),"onNext"+integer);
             }
         });
+//        HomeService homeService= RetrofitUtil.create(HomeService.class);
+//        Call<String> call=homeService.getAuto();
+//
+        Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("1111");
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String drawable) {
+                Log.i(MainActivity.class.getName(),"onNext"+drawable);
+            }
+        });
+//
+//
+//        Observable.just("").map(new Func1<String, Drawable>() {
+//            @Override
+//            public Drawable call(String s) {
+//                return null;
+//            }
+//        }).subscribe(new Action1<Drawable>() {
+//            @Override
+//            public void call(Drawable drawable) {
+//
+//            }
+//        });
+
     }
-    //git flow release
-    //git flow v4.0.1
-    //git flow v4.0.2
-
-    //git flow v4.0.3
-    //git flow bug 4.0.3
 }

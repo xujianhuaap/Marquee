@@ -10,42 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
-   <FrameLayout
-       android:id="@+id/container"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-
-   </FrameLayout>
-   <io.xjh.tablelayout.views.TableLayout
-       android:id="@+id/tab"
-       android:layout_width="match_parent"
-       android:layout_height="50dp"
-       android:scrollbars="none"
-       android:fillViewport="true">
-
-   </io.xjh.tablelayout.views.TableLayout>
-   <TextView
-       android:id="@+id/tv_button_add"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="20dp"
-       android:padding="10dp"
-       android:text="update data"
-       android:layout_below="@+id/view"
-       android:layout_alignParentBottom="true"
-       android:background="@android:color/holo_green_dark"
-       />
-   <TextView
-       android:id="@+id/tv_button_delete"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="20dp"
-       android:layout_marginLeft="30dp"
-       android:padding="10dp"
-       android:text="delete data"
-       android:layout_below="@+id/view"
-       android:layout_alignParentBottom="true"
-       android:layout_toRightOf="@+id/tv_button_add"
-       android:background="@android:color/holo_green_dark"
-       />
+  <WebView
+      android:id="@+id/web"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"></WebView>
 </RelativeLayout>
