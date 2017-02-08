@@ -63,9 +63,9 @@ public class RetrofitUtil {
                                 .url(httpUrl)
                                 .build();
                         Response response=chain.proceed(newRequest);
-                        Log.d("request","Request--->"+newRequest.toString());
-                        Log.d("request","Request Header--->"+newRequest.headers().toString());
-                        Log.d("response","Response--->"+response.toString());
+                        Log.d("retrofit","Request--->"+newRequest.toString());
+                        Log.d("retrofit","Request Header--->"+newRequest.headers().toString());
+                        Log.d("retrofit","Response--->"+response.toString());
                         return response;
                     }
                 })
@@ -87,6 +87,7 @@ public class RetrofitUtil {
         httpUrl = httpUrl.newBuilder()
                 .addQueryParameter("sign", MD5Util.encode(buffer.toString()))
                 .build();
+        Log.d("retrofit","sign "+buffer);
         return httpUrl;
     }
 

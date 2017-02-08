@@ -5,6 +5,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 /**
@@ -17,5 +18,5 @@ public interface HomeService {
 
     @FormUrlEncoded
     @POST("/user")
-    Call<String> submitUserInfo(@Field("UserName")String userName);
+    Call<String> submitUserInfo(@Query("user_name") String userName,@Field("user_info")String userInfo);
 }

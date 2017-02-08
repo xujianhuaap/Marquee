@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
         ButterKnife.bind(this);
-        Call<String> call=RetrofitUtil.create(HomeService.class).getAuto();
+        Call<String> call=RetrofitUtil.create(HomeService.class).submitUserInfo("xu","1111111");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
