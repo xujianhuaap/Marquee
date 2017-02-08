@@ -1,10 +1,15 @@
 package io.xjh.app.utils;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -51,8 +56,11 @@ public class RetrofitUtil {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
                         Request request=chain.request();
+                        HttpUrl httpUrl=request.url();
+                        httpUrl = addSign(httpUrl);
                         Request newRequest = request.newBuilder()
                                 .addHeader("User-Agent", "MarqueeView")
+                                .url(httpUrl)
                                 .build();
                         Response response=chain.proceed(newRequest);
                         Log.d("request","Request--->"+newRequest.toString());
@@ -63,6 +71,25 @@ public class RetrofitUtil {
                 })
                 .build();
     }
+
+    @NonNull
+    private HttpUrl addSign(HttpUrl httpUrl) {
+        Set<String> nameSet = httpUrl.queryParameterNames();
+        ArrayList<String> nameList = new ArrayList<>();
+        nameList.addAll(nameSet);
+        Collections.sort(nameList);
+
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < nameList.size(); i++) {
+            buffer.append("&").append(nameList.get(i)).append("=").append(httpUrl.queryParameterValues(nameList.get(i)) != null &&
+                    httpUrl.queryParameterValues(nameList.get(i)).size() > 0 ? httpUrl.queryParameterValues(nameList.get(i)).get(0) : "");
+        }
+        httpUrl = httpUrl.newBuilder()
+                .addQueryParameter("sign", MD5Util.encode(buffer.toString()))
+                .build();
+        return httpUrl;
+    }
+
     public static  <T>T create(Class<T> clazz){
         if(retrofitUtil==null){
             getInstance();
