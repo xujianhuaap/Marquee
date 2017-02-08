@@ -11,6 +11,8 @@ import butterknife.ButterKnife;
 import io.xjh.app.data.HomeService;
 import io.xjh.app.utils.RetrofitUtil;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
@@ -28,63 +30,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
         ButterKnife.bind(this);
-        Observable.just(1,2,3).subscribe(new Subscriber<Integer>() {
+        Call<String> call=RetrofitUtil.create(HomeService.class).getAuto();
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onCompleted() {
-
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d(MainActivity.class.getName(),"Response\t"+response.toString());
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void onFailure(Call<String> call, Throwable t) {
 
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                Log.i(MainActivity.class.getName(),"onNext"+integer);
             }
         });
-//        HomeService homeService= RetrofitUtil.create(HomeService.class);
-//        Call<String> call=homeService.getAuto();
-//
-        Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext("1111");
-                subscriber.onCompleted();
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(String drawable) {
-                Log.i(MainActivity.class.getName(),"onNext"+drawable);
-            }
-        });
-//
-//
-//        Observable.just("").map(new Func1<String, Drawable>() {
-//            @Override
-//            public Drawable call(String s) {
-//                return null;
-//            }
-//        }).subscribe(new Action1<Drawable>() {
-//            @Override
-//            public void call(Drawable drawable) {
-//
-//            }
-//        });
-
     }
 }

@@ -12,7 +12,7 @@ import retrofit2.http.Url;
  */
 
 public interface HomeService {
-    @GET("/auto")
+    @GET("/data/2.5/weather?id=2172797")
     Call<String> getAuto();
 
     @FormUrlEncoded
