@@ -24,10 +24,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitUtil {
     public static final int READ_TIME_OUT=30;
     public static final int CONNECT_TIME_OUT=60;
-    public static final String BASE_URL="http://api.openweathermap.org";
+    public static final String BASE_URL="http://192.168.211.177:7777";
 
 
-    public static Retrofit retrofit;
+    public static Retrofit retrofit;//
     public static RetrofitUtil retrofitUtil;
     public static RetrofitUtil getInstance(){
         if(retrofitUtil==null){
@@ -45,7 +45,17 @@ public class RetrofitUtil {
     }
 
     /***
-     *
+     * IgIyitf5N4QYyBCGcCLjX2UZbnRHWaYesBBUSQCt2ipqJYFGW2HDyXTxCS28S5HGuM/iCG8ze2TNQsnGFf+/EP5xHuGjm24EU7YSsf17PEsIP8Le8eup8anJPn9QcjwF4LxWXva9llPxQ4hK5n/Nrldy2U0B8MBtBtALOMF+ZhI=
+     *{"X-PPD-KEY":"tc-002",
+     * "X-PPD-APPID":"10080004",
+     * "X-PPD-SIGN":"IgIyitf5N4QYyBCGcCLjX2UZbnRHWaYesBBUSQCt2ipqJYFGW2HDyXTxCS28S5HGuM/iCG8ze2TNQsnGFf+/EP5xHuGjm24EU7YSsf17PEsIP8Le8eup8anJPn9QcjwF4LxWXva9llPxQ4hK5n/Nrldy2U0B8MBtBtALOMF+ZhI=",
+     * "X-PPD-TOKEN":"41cf8343-de92-4e94-a75f-b4ae8bd6ce0f",41cf8343-de92-4e94-a75f-b4ae8bd6ce0f
+     * "X-PPD-APPOS":"2",
+     * "X-PPD-DEVICEID":"354224061858781",
+     * "X-PPD-TIMESTAMP":"1486670142",
+     * "X-PPD-APPVERSION":"4.5.0",
+     * "X-PPD-SIGNVERSION":"1","
+     * X-PPD-KEYVERSION":"1"}
      * @return
      */
     private OkHttpClient initOkHttpClient(){
@@ -60,12 +70,25 @@ public class RetrofitUtil {
                         httpUrl = addSign(httpUrl);
                         Request newRequest = request.newBuilder()
                                 .addHeader("User-Agent", "MarqueeView")
+                                .addHeader("X-PPD-KEY","tc-002")
+                                .addHeader("X-PPD-SIGN","IgIyitf5N4QYyBCGcCLjX2UZbnRHWaYesBBUSQCt2ipqJYFGW2HDyXTxCS28S5HGuM/iCG8ze2TNQsnGFf+/EP5xHuGjm24EU7YSsf17PEsIP8Le8eup8anJPn9QcjwF4LxWXva9llPxQ4hK5n/Nrldy2U0B8MBtBtALOMF+ZhI=")
+                                .addHeader("X-PPD-APPID","10080004")
+                                .addHeader("X-PPD-TOKEN","41cf8343-de92-4e94-a75f-b4ae8bd6ce0f")
+                                .addHeader("X-PPD-APPOS","2")
+                                .addHeader("X-PPD-DEVICEID","354224061858781")
+                                .addHeader("X-PPD-TIMESTAMP",System.currentTimeMillis()/1000+"")
+                                .addHeader("X-PPD-APPVERSION","4.5.0")
+                                .addHeader("X-PPD-SIGNVERSION","1")
+                                .addHeader("X-PPD-KEYVERSION","1")
+
                                 .url(httpUrl)
                                 .build();
                         Response response=chain.proceed(newRequest);
                         Log.d("retrofit","Request--->"+newRequest.toString());
                         Log.d("retrofit","Request Header--->"+newRequest.headers().toString());
                         Log.d("retrofit","Response--->"+response.toString());
+                        Log.d("retrofit","Response Body--->"+new String(response.body().bytes()));
+                        Log.d("retrofit","Response Header--->"+response.headers().toString());
                         return response;
                     }
                 })
@@ -85,7 +108,7 @@ public class RetrofitUtil {
                     httpUrl.queryParameterValues(nameList.get(i)).size() > 0 ? httpUrl.queryParameterValues(nameList.get(i)).get(0) : "");
         }
         httpUrl = httpUrl.newBuilder()
-                .addQueryParameter("sign", MD5Util.encode(buffer.toString()))
+//                .addQueryParameter("sign", MD5Util.encode(buffer.toString()))
                 .build();
         Log.d("retrofit","sign "+buffer);
         return httpUrl;

@@ -13,7 +13,11 @@ import retrofit2.http.Url;
  */
 
 public interface HomeService {
-    @GET("/data/2.5/weather?id=2172797")
+    ///PPDMobileBorrow/AccountService/GetCurrentUserAmountV2
+    @POST("/PPDMobileBorrow/AppDataCollectService/UpdateAppUserContact")
+    Call<String> getAuto(@Query("AppId")String AppId,@Query("idfa")String idfa,@Query("Deviceid")String Deviceid);
+
+    @POST("PPDMobileBorrow/AccountService/GetCurrentUserAmountV2")
     Call<String> getAuto();
 
     @FormUrlEncoded
