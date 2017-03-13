@@ -9,8 +9,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SecondActivity extends AppCompatActivity {
-    TextView btnClick;
+public class ThirdActivity extends AppCompatActivity {
     @Bind(R.id.tv_button_add)
     TextView btnAdd;
     @Bind(R.id.tv_button_delete)
@@ -23,11 +22,11 @@ public class SecondActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        btnAdd.setText("to ThirdActivity");
+        btnAdd.setText("to FourthActivity");
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SecondActivity.this, ThirdActivity.class));
+                startActivity(new Intent(ThirdActivity.this,FourthActivity.class));
             }
         });
 

@@ -29,31 +29,32 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/***
+ * 对于 FLAG_CLEAR_TOP 只有TargetActivity 在task中已经存在才能清除，其从栈顶到targetActivity 之间的所有Activity
+ * 否则 只会创建新的Activity 置于栈顶。
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private DialogTest dialogTest;
+    @Bind(R.id.tv_button_add)
+    TextView btnAdd;
+    @Bind(R.id.tv_button_delete)
+    TextView btnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main);
-        TextView btnClick=(TextView)findViewById(R.id.btn_click) ;
-        TextView btnClickJump=(TextView)findViewById(R.id.btn_click_right) ;
-        btnClickJump.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
+
+        btnAdd.setText("to SecondActivity");
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,SecondActivity.class));
+                finish();
             }
         });
-        btnClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogTest= new DialogTest();
-                getSupportFragmentManager().beginTransaction().replace(R.id.holder,dialogTest).commit();
-            }
-        });
-
-
 
     }
 

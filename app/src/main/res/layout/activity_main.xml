@@ -17,7 +17,6 @@
        android:layout_marginTop="20dp"
        android:padding="10dp"
        android:text="update data"
-       android:layout_below="@+id/view"
        android:background="@android:color/holo_green_dark"
        />
    <TextView
@@ -28,7 +27,6 @@
        android:layout_marginLeft="30dp"
        android:padding="10dp"
        android:text="delete data"
-       android:layout_below="@+id/view"
        android:layout_toRightOf="@+id/tv_button_add"
        android:background="@android:color/holo_green_dark"
        />
