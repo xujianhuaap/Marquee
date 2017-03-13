@@ -32,6 +32,8 @@ import rx.schedulers.Schedulers;
 /***
  * 对于 FLAG_CLEAR_TOP 只有TargetActivity 在task中已经存在才能清除，其从栈顶到targetActivity 之间的所有Activity
  * 否则 只会创建新的Activity 置于栈顶。
+ *
+ * FLAG_NEW_TASK 如果某个 task 已经存在TargetActivity ,那么不会创建新的TargetActivity ,而是将这个task 变成前台。
  */
 public class MainActivity extends AppCompatActivity {
 
