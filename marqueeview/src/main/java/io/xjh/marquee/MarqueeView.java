@@ -325,8 +325,9 @@ public class MarqueeView<T> extends LinearLayout{
             }
         }
         if(!TextUtils.isEmpty(s)){
-            float v=(s.length()-cnt)/10*textSize*9+(cnt+1)*textSize+(textLeftPadding+textRightPadding)*density;
+            float v=s.length()*textSize+(textLeftPadding+textRightPadding)*density;
             Log.d("MarqueeView","digit count"+cnt+"length"+s.length());
+            Log.d("MarqueeView","textSize"+textSize+"length\t"+v);
             return (int)v ;
         }
         return 0;

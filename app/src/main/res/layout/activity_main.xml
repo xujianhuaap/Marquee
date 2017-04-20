@@ -10,7 +10,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
-
    <io.xjh.marquee.MarqueeView
        android:id="@+id/view"
        android:layout_width="match_parent"
@@ -20,28 +19,5 @@
        app:view_text_size="14sp"
        app:view_text_color="@android:color/holo_green_dark"
        android:background="@android:color/holo_orange_dark">
-
    </io.xjh.marquee.MarqueeView>
-   <TextView
-       android:id="@+id/tv_button_add"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="20dp"
-       android:padding="10dp"
-       android:text="update data"
-       android:layout_below="@+id/view"
-       android:background="@android:color/holo_green_dark"
-       />
-   <TextView
-       android:id="@+id/tv_button_delete"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="20dp"
-       android:layout_marginLeft="30dp"
-       android:padding="10dp"
-       android:text="delete data"
-       android:layout_below="@+id/view"
-       android:layout_toRightOf="@+id/tv_button_add"
-       android:background="@android:color/holo_green_dark"
-       />
 </RelativeLayout>

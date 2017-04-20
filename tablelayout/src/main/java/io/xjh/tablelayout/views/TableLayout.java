@@ -17,8 +17,9 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.xjh.marquee.annotation.MsgField;
 import io.xjh.tablelayout.R;
-import io.xjh.tablelayout.annotaions.annotation.MsgField;
+
 
 /**
  * Created by xujianhua on 2016/12/31.
