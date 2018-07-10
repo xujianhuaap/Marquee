@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             }else {
                 s=new Student("到账提醒，你有一笔资金到账银行卡尾号（0395）",23+i);
             }
-
+            // jenkins test
             students.add(s);
         }
         try {
