@@ -27,6 +27,22 @@ android {
             signingConfig signingConfigs.releaseConfig
         }
     }
+    productFlavors {
+        demo {
+            versionName "1.0-demo"
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+
+        variant.outputs.each { output ->
+            def fileName = "marquee_v${variant.versionName}_release_${variant.flavorName}.apk"
+            if (variant.buildType.isDebuggable()) {
+                fileName = "marquee_v${variant.versionName}_debug_${variant.flavorName}.apk"
+            }
+            output.outputFile = new File(output.outputFile.parent, fileName)
+        }
+    }
 }
 
 dependencies {
