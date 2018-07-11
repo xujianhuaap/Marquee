@@ -58,5 +58,5 @@ dependencies {
 }
 
 def releaseTime() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+    return new Date().format("yyyyMMdd_HHmmss", TimeZone.getTimeZone("UTC"))
 }
