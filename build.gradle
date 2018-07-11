@@ -23,4 +23,7 @@ task clean(type: Delete) {
 }
 ext{
     base_url= "http://baidu.com"
+    if (System.properties['base_url'] != null) {
+        baseUrl = System.properties['base_url']
+    }
 }
