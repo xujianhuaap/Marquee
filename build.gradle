@@ -33,6 +33,6 @@ ext{
     }
 
     if (System.properties.getProperty("base_url") != null) {
-        baseUrl = System.properties.getProperty("base_url")
+        base_url = System.properties.getProperty("base_url")
     }
 }
