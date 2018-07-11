@@ -23,6 +23,14 @@ task clean(type: Delete) {
 }
 ext{
     base_url= "http://baidu.com"
+    test = System.properties.propertyNames()
+
+    while (test.hasMoreElements()){
+        s = test.nextElement()
+        printf("pro\t%s\n",s)
+
+    }
+
     if (System.properties['base_url'] != null) {
         baseUrl = System.properties['base_url']
     }
