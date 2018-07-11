@@ -21,3 +21,6 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+ext{
+    base_url= "http://baidu.com"
+}
