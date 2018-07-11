@@ -27,7 +27,8 @@ ext{
 
     while (test.hasMoreElements()){
         s = test.nextElement()
-        printf("pro\t%s\n",s)
+        printf("pro\t%s",s)
+        printf("\t--->%s\n",System.properties.getProperty(s))
 
     }
 
