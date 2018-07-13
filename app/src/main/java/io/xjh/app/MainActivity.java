@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toast.makeText(this,"BaseUrl\t-->"+BuildConfig.BASE_URL,Toast.LENGTH_LONG).show();
+       //jenkins webhook
         marqueeView = (MarqueeView)findViewById(R.id.view);
         students = new ArrayList<>();
         for(int i=0;i<2;i++){
