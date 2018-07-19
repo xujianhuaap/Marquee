@@ -1,5 +1,8 @@
 package io.xjh.app;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -19,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this,"BaseUrl\t-->"+BuildConfig.BASE_URL,Toast.LENGTH_LONG).show();
-       //jenkins webhook
-        // add github plugin
         marqueeView = (MarqueeView)findViewById(R.id.view);
         students = new ArrayList<>();
         for(int i=0;i<2;i++){
@@ -40,5 +40,43 @@ public class MainActivity extends AppCompatActivity {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkHijacking(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        checkHijacking(this);
+    }
+
+    public static void checkHijacking(Activity activity) {
+        if (checkActivity(activity)) return;
+        Toast.makeText(activity, "------danger------", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 检测当前Activity是否安全
+     */
+    private static boolean checkActivity(Activity context) {
+        boolean safe = false;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List appList = am.getRunningAppProcesses();
+        ActivityManager.RunningAppProcessInfo app;
+
+        for (int i = 0; i < appList.size(); i++) {
+            //ActivityManager.RunningAppProcessInfo app : appList
+            app = (ActivityManager.RunningAppProcessInfo) appList.get(i);
+            if (app.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && context.getPackageName().equals(app.processName)) {//表示前台运行进程.
+                safe = true;
+            }
+        }
+        return safe;
     }
 }
