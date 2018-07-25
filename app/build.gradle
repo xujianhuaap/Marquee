@@ -14,10 +14,10 @@ android {
     }
     signingConfigs {
         releaseConfig {
-            keyAlias 'xjh'
-            keyPassword 'xjh123456'
-            storeFile file('\\xjh.keystore.jks')
-            storePassword 'xjh123456'
+            keyAlias 'marquee'
+            keyPassword '123456'
+            storeFile file('../marquee.jks')
+            storePassword '123456'
         }
     }
     buildTypes {
