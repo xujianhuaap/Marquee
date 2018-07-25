@@ -2,6 +2,7 @@ package io.xjh.app.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 
@@ -12,17 +13,27 @@ import java.io.File;
 public class FileUtil {
         public static File getExternalStorage(){
             if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                Log.d(FileUtil.class.getName(),
+                        "Environment.getExternalStorageDirectory()\t"
+                                +Environment.getExternalStorageDirectory().getAbsolutePath());
                 return Environment.getExternalStorageDirectory();
             }
             return null;
         }
 
-        public static File getInternalStorage(Context context){
+        public static File getAppExternalStorage(Context context){
+            Log.d(FileUtil.class.getName(),
+                    "context.getExternalFilesDir\t"
+                            +context.getExternalFilesDir(null).getAbsolutePath());
             context.getExternalFilesDir(null);
             return null;
         }
 
-        public static File getCacheFile(){
-            return getCacheFile();
+        //
+        public static File getFilesDir(Context context){
+            Log.d(FileUtil.class.getName(),
+                    "context.getFilesDir\t"
+                            +context.getFilesDir().getAbsolutePath());
+            return context.getFilesDir();
         }
 }

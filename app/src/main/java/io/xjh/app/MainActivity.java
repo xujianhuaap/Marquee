@@ -2,12 +2,12 @@ package io.xjh.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.xjh.app.bean.Student;
+import io.xjh.app.utils.FileUtil;
 import io.xjh.marquee.MarqueeView;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,7 +19,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this,"BaseUrl\t"+BuildConfig.BASE_URL,Toast.LENGTH_LONG).show();
+        FileUtil.getExternalStorage();
+        FileUtil.getAppExternalStorage(this);
+        FileUtil.getFilesDir(this);
         marqueeView = (MarqueeView)findViewById(R.id.view);
         students = new ArrayList<>();
         for(int i=0;i<2;i++){
