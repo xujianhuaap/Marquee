@@ -22,6 +22,7 @@
         <activity android:name=".DialerActivity"></activity>
         <activity android:name=".ContactsActivity"></activity>
         <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".ListActivity"></activity>
     </application>
 
 </manifest>
